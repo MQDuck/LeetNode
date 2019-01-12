@@ -15,8 +15,8 @@ def construct_binary_tree(arr):
                 node.right = TreeNode(arr[(i << 1) + 2])
                 construct((i << 1) + 2, node.right)
 
-    if len(arr) == 0:
-        return []
+    if not arr:
+        return None
 
     root = TreeNode(arr[0])
     construct(0, root)
@@ -33,6 +33,7 @@ class ListNode:
 def construct_linked_list(arr):
     if not arr:
         return None
+
     head = ListNode(arr[0])
     node = head
     for i in range(1, len(arr)):
@@ -43,4 +44,3 @@ def construct_linked_list(arr):
 
 if __name__ == "__main__":
     root = construct_binary_tree([6, 2, 8, 0, 4, 7, 9, None, None, 3, 5])
-    print(root)
