@@ -32,6 +32,14 @@ class ListNode:
         self.val = x
         self.next = None
 
+    def __repr__(self):
+        vals = []
+        node = self.next
+        while node is not None:
+            vals.append(str(", " + repr(node.val)))
+            node = node.next
+        return "[" + str(self.val) + "".join(vals) + "]"
+
 
 def construct_linked_list(arr: List) -> Optional[ListNode]:
     if not arr:
