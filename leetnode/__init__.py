@@ -1,3 +1,6 @@
+from typing import List, Optional
+
+
 class TreeNode:
     def __init__(self, x):
         self.val = x
@@ -5,7 +8,7 @@ class TreeNode:
         self.right = None
 
 
-def construct_binary_tree(arr):
+def construct_binary_tree(arr: List) -> Optional[TreeNode]:
     def construct(i, node):
         if (i << 1) + 1 < len(arr):
             if arr[(i << 1) + 1] is not None:
@@ -30,7 +33,7 @@ class ListNode:
         self.next = None
 
 
-def construct_linked_list(arr):
+def construct_linked_list(arr: List) -> Optional[ListNode]:
     if not arr:
         return None
 
