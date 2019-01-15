@@ -36,9 +36,9 @@ class ListNode:
         vals = []
         node = self.next
         while node is not None:
-            vals.append(str(", " + repr(node.val)))
+            vals.append(f", {node.val}")
             node = node.next
-        return "[" + str(self.val) + "".join(vals) + "]"
+        return f"[{self.val}{''.join(vals)}]"
 
 
 def construct_linked_list(arr: List) -> Optional[ListNode]:
@@ -54,4 +54,5 @@ def construct_linked_list(arr: List) -> Optional[ListNode]:
 
 
 if __name__ == "__main__":
-    root = construct_binary_tree([6, 2, 8, 0, 4, 7, 9, None, None, 3, 5])
+    llist = construct_linked_list([0, 1, 2, 3, 4, 5])
+    print(llist)
