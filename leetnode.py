@@ -2,8 +2,8 @@ from typing import List, Optional
 
 
 class TreeNode:
-    def __init__(self, x):
-        self.val = x
+    def __init__(self, val):
+        self.val = val
         self.left = None
         self.right = None
 
@@ -92,9 +92,11 @@ def matrix_to_string(matrix: List[List]) -> str:
 
     str_arr = []
     for i in range(len(matrix)):
-        str_arr.append('[ [ ' if i == 0 else '  [ ')
-        str_arr.append(''.join([f'{item:>{item_spacing}}, ' for item in matrix[i]])[:-2] + ' ]')
-        str_arr.append(' ]' if i == len(matrix) - 1 else ',\n')
+        str_arr.append(
+            ('[ [ ' if i == 0 else '  [ ') +
+            ''.join([f'{item:>{item_spacing}}, ' for item in matrix[i]])[:-2] + ' ]' +
+            (' ]' if i == len(matrix) - 1 else ',\n')
+        )
     return ''.join(str_arr)
 
 
@@ -102,6 +104,7 @@ if __name__ == '__main__':
     llist = construct_linked_list([0, 1, 2, 3, 4, 5])
     btree = construct_binary_tree([3, 9, 20, None, None, 15, 7])
     a = flatten_binary_tree(btree)
+    matrix = [[3, 0, 8, 4], [2, 4, 5, 7], [9, 2, 6, 3], [0, 3, 1, 2340]]
     print(list(llist))
     print(list(btree))
-    print(matrix_to_string([[3, 0, 8, 4], [2, 4, 5, 7], [9, 2, 6, 3], [0, 3, 1, 2340]]))
+    print(matrix_to_string(matrix))
