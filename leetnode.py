@@ -8,15 +8,18 @@ class TreeNode:
         self.right = None
 
     def __iter__(self):
-        arr = flatten_binary_tree(self)
+        arr = flatten_btree(self)
         for val in arr:
             yield val
 
     def __repr__(self) -> str:
-        return str(flatten_binary_tree(self))
+        return str(flatten_btree(self))
 
 
-def construct_binary_tree(arr: List) -> Optional[TreeNode]:
+def construct_btree(arr: List) -> Optional[TreeNode]:
+    if not arr:
+        return None
+
     def construct(i, node):
         nonlocal arr
         if (i << 1) + 1 < len(arr):
@@ -27,15 +30,12 @@ def construct_binary_tree(arr: List) -> Optional[TreeNode]:
                 node.right = TreeNode(arr[(i << 1) + 2])
                 construct((i << 1) + 2, node.right)
 
-    if not arr:
-        return None
-
     root = TreeNode(arr[0])
     construct(0, root)
     return root
 
 
-def flatten_binary_tree(root: TreeNode) -> Optional[list]:
+def flatten_btree(root: TreeNode) -> Optional[list]:
     arr = {}
 
     def flatten(i, node):
@@ -90,19 +90,18 @@ def matrix_to_string(matrix: List[List]) -> str:
     item_spacing = 0 if len(lengths) == 0 else max(lengths)
     del lengths
 
-    len_matrix = len(matrix)
     str_arr = []
-    for i in range(len_matrix):
+    for i in range(len(matrix)):
         str_arr.append('[ [ ' if i == 0 else '  [ ')
         str_arr.append(''.join([f'{item:>{item_spacing}}, ' for item in matrix[i]])[:-2] + ' ]')
-        str_arr.append(' ]' if i == len_matrix - 1 else ',\n')
+        str_arr.append(' ]' if i == len(matrix) - 1 else ',\n')
     return ''.join(str_arr)
 
 
 if __name__ == '__main__':
     llist = construct_linked_list([0, 1, 2, 3, 4, 5])
-    btree = construct_binary_tree([3, 9, 20, None, None, 15, 7])
-    a = flatten_binary_tree(btree)
+    btree = construct_btree([3, 9, 20, None, None, 15, 7])
+    a = flatten_btree(btree)
     mat = [[3, 0, 8, 4], [2, 4, 5, 7], [9, 2, 6, 3], [0, 3, 1, 2340]]
     print(list(llist))
     print(list(btree))
