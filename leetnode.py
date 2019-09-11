@@ -8,16 +8,16 @@ class TreeNode:
         self.right = None
 
     def __iter__(self):
-        arr = flatten_btree(self)
+        arr = btree_to_list(self)
         for val in arr:
             yield val
 
     def __repr__(self) -> str:
-        return str(flatten_btree(self))
+        return str(btree_to_list(self))
 
 
 def construct_btree(arr: List) -> Optional[TreeNode]:
-    if not arr:
+    if not arr or arr[0] is None:
         return None
 
     def construct(i, node):
@@ -35,24 +35,49 @@ def construct_btree(arr: List) -> Optional[TreeNode]:
     return root
 
 
-def flatten_btree(root: TreeNode) -> Optional[list]:
-    arr = {}
+def btree_to_list(root: TreeNode) -> Optional[list]:
+    items = {}
 
     def flatten(i, node):
-        nonlocal arr
-        if node is None:
-            arr[i] = None
-        else:
-            arr[i] = node.val
+        nonlocal items
+        if node is not None:
+            items[i] = node.val
             flatten((i << 1) + 1, node.left)
             flatten((i << 1) + 2, node.right)
 
     flatten(0, root)
-    arr = [v for k, v in sorted(arr.items())]
-    i = len(arr) - 1
-    while i >= 0 and arr[i] is None:
-        i -= 1
-    return arr[:i + 1]
+    for i in range(max(items.keys())):
+        if i not in items:
+            items[i] = None
+    return [v for _, v in sorted(items.items())]
+
+
+def btree_list_to_string(arr: List) -> str:
+    if len(arr) == 0:
+        return ''
+
+    item_spacing = max([1 if item is None else len(str(item)) for item in arr])
+    height = int.bit_length(len(arr)) - 1
+
+    str_arr = []
+    i = 0
+    for level in range(height + 1):
+        spacing_margin = ((1 << (height - level)) - 1) * item_spacing
+        spacing_middle = ((1 << (height - level + 1)) - 1) * item_spacing
+
+        str_arr.append(' ' * spacing_margin)
+        end = (1 << level) - 1
+        for k in range(end + 1):
+            str_arr.append(' ' * item_spacing if i >= len(arr) or arr[i] is None else f'{arr[i]:^{item_spacing}}')
+            str_arr.append('\n' if k == end else ' ' * spacing_middle)
+            i += 1
+
+    return ''.join(str_arr)
+
+
+
+def btree_to_string(root: TreeNode) -> str:
+    return btree_list_to_string(btree_to_list(root))
 
 
 class ListNode:
@@ -100,10 +125,12 @@ def matrix_to_string(matrix: List[List]) -> str:
 
 if __name__ == '__main__':
     llist = construct_linked_list([0, 1, 2, 3, 4, 5])
-    btree = construct_btree([3, 9, 20, None, None, 15, 7])
-    a = flatten_btree(btree)
+    btree = construct_btree([3, 9, 20, None, None, 15, 7, None, None, None, None, 222, None, 6, 70])
+    #btree = construct_btree([3, 9, 20, 8, 16, 15, 7, 1, 2, None, None, 3, 4, 5])
+    a = btree_to_list(btree)
     mat = [[3, 0, 8, 4], [2, 4, 5, 7], [9, 2, 6, 3], [0, 3, 1, 2340]]
     print(list(llist))
-    print(list(btree))
+    print(btree)
+    print(btree_to_string(btree))
     print(a)
     print(matrix_to_string(mat))
