@@ -35,21 +35,37 @@ def construct_btree(arr: List) -> Optional[TreeNode]:
     return root
 
 
-def btree_to_list(root: TreeNode) -> Optional[list]:
-    items = {}
+def btree_to_list(root: TreeNode) -> List:
+    length = 1
+    level_length = 1
+    node = root
+    while True:
+        if node.right is not None:
+            node = node.right
+            level_length <<= 1
+            length += level_length
+        elif node.left is not None:
+            node = node.left
+            level_length = (level_length << 1) - 1
+            length += level_length
+        else:
+            break
+
+    arr = [None] * length
+
+    del node
+    del length
+    del level_length
 
     def flatten(i, node):
-        nonlocal items
+        nonlocal arr
         if node is not None:
-            items[i] = node.val
+            arr[i] = node.val
             flatten((i << 1) + 1, node.left)
             flatten((i << 1) + 2, node.right)
 
     flatten(0, root)
-    for i in range(max(items.keys())):
-        if i not in items:
-            items[i] = None
-    return [v for _, v in sorted(items.items())]
+    return arr
 
 
 def btree_list_to_string(arr: List) -> str:
@@ -123,7 +139,7 @@ def matrix_to_string(matrix: List[List]) -> str:
 
 if __name__ == '__main__':
     llist = construct_linked_list([0, 1, 2, 3, 4, 5])
-    btree = construct_btree([3, 9, 20, None, None, 15, 7, None, None, None, None, 222, None, 6, 70])
+    btree = construct_btree([3, 9, 20, None, None, 15, 7, None, None, None, None, 222, None, 6])
     # btree = construct_btree([3, 9, 20, 8, 16, 15, 7, 1, 2, None, None, 3])
     a = btree_to_list(btree)
     mat = [[3, 0, 8, 4], [2, 4, 5, 7], [9, 2, 6, 3], [0, 3, 1, 2340]]
