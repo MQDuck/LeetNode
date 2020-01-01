@@ -20,7 +20,7 @@ class TreeNode(Generic[T]):
 
     @staticmethod
     def from_list(arr: List[T]) -> Optional[TreeNode[T]]:
-        return construct_btree(arr)
+        return build_btree(arr)
 
     def to_list(self) -> List[T]:
         def get_last_index(i, node):
@@ -87,7 +87,7 @@ class TreeNode(Generic[T]):
         return ''.join(str_arr[0:-1])
 
 
-def construct_btree(arr: List[T]) -> Optional[TreeNode[T]]:
+def build_btree(arr: List[T]) -> Optional[TreeNode[T]]:
     if not arr or arr[0] is None:
         return None
 
@@ -122,10 +122,10 @@ class ListNode(Generic[T]):
 
     @staticmethod
     def from_list(arr: List[T]) -> Optional[ListNode[T]]:
-        return construct_linked_list(arr)
+        return build_linked_list(arr)
 
 
-def construct_linked_list(arr: List[T]) -> Optional[ListNode[T]]:
+def build_linked_list(arr: List[T]) -> Optional[ListNode[T]]:
     if not arr:
         return None
 
@@ -154,19 +154,21 @@ def matrix_to_string(matrix: List[List]) -> str:
 
 
 if __name__ == '__main__':
-    llist1 = construct_linked_list([0, 1, 2, 3, 4, 5])
+    llist1 = build_linked_list([0, 1, 2, 3, 4, 5])
     llist2 = ListNode.from_list(['a', 'b', 'c', 'd'])
     print(llist1)
     print(llist2)
     print()
 
-    btree1 = construct_btree([3, 9, 20, None, None, 15, 7, None, None, None, None, 222, None, 6])
-    btree2 = TreeNode.from_list([3, 9, 20, 8, 16, 15, 7, 1, 2, None, None, 3])
+    btree1 = build_btree([3, 9, 20, 8, 16, 15, 7, 1, 2, None, None, 3])
+    btree2 = TreeNode.from_list([3, 9, 20, None, 42, 15, 7, None, None, None, None, 222, 13, 6])
     print(btree1)
     print(btree1.to_tree_string())
     print(btree2)
     print(btree2.to_tree_string())
     print()
 
-    mat = [[3, 0, 8, 4], [2, 4, 5, 7], [9, 2, 6, 3], [0, 3, 1, 2340]]
-    print(matrix_to_string(mat))
+    mat1 = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+    mat2 = [[3, 0, 8, 4], [2, 2340, 5, 7], [97, 2, 6, 3], [0, 3, 1, 13]]
+    print(matrix_to_string(mat1))
+    print(matrix_to_string(mat2))
