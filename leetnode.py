@@ -68,7 +68,23 @@ def btree_to_list(root: TreeNode) -> List:
     return arr
 
 
-def btree_list_to_string(arr: List) -> str:
+# def btree_to_list(root: TreeNode) -> List:
+#     def get_length(i, node):
+#         return i if node is None else max(get_length((i << 1) + 1, node.left), get_length((i << 1) + 2, node.right))
+#
+#     def flatten(i, node):
+#         nonlocal arr
+#         if node is not None:
+#             arr[i] = node.val
+#             flatten((i << 1) + 1, node.left)
+#             flatten((i << 1) + 2, node.right)
+#
+#     arr = [None] * get_length(0, root)
+#     flatten(0, root)
+#     return arr
+
+
+def btree_list_to_string(arr: List, draw_branches=True) -> str:
     if not arr:
         return ''
 
@@ -80,18 +96,41 @@ def btree_list_to_string(arr: List) -> str:
     for level in range(height + 1):
         spacing_margin = ((1 << (height - level)) - 1) * item_spacing
         spacing_middle = ((1 << (height - level + 1)) - 1) * item_spacing
+        end = min(i + (1 << level), len(arr))
+        j = i
 
         str_arr.append(' ' * spacing_margin)
         for i in range(i, end):
             str_arr.append(' ' * item_spacing if arr[i] is None else f'{arr[i]:^{item_spacing}}')
-            str_arr.append('\n' if i == end - 1 else ' ' * spacing_middle)
+            if i != end:
+                str_arr.append(' ' * spacing_middle)
         i += 1
+        while str_arr[-1].isspace():
+            str_arr = str_arr[0:-1]
+        str_arr.append('\n')
 
-    return ''.join(str_arr)
+        if draw_branches and level != height:
+            str_arr.append(' ' * (spacing_margin - 1))
+            for j in range(j, end):
+                if arr[j] is None:
+                    str_arr.append(' ' * (item_spacing + 2))
+                else:
+                    left = (j << 1) + 1
+                    right = (j << 1) + 2
+                    str_arr.append(' ' if left >= len(arr) or arr[left] is None else '/')
+                    str_arr.append(' ' * item_spacing)
+                    str_arr.append(' ' if right >= len(arr) or arr[right] is None else '\\')
+                if j != end:
+                    str_arr.append(' ' * (spacing_middle - 2))
+            while str_arr[-1].isspace():
+                str_arr = str_arr[0:-1]
+            str_arr.append('\n')
+
+    return ''.join(str_arr[0:-1])
 
 
-def btree_to_string(root: TreeNode) -> str:
-    return btree_list_to_string(btree_to_list(root))
+def btree_to_string(root: TreeNode, draw_branches=True) -> str:
+    return btree_list_to_string(btree_to_list(root), draw_branches)
 
 
 class ListNode:
@@ -140,6 +179,7 @@ def matrix_to_string(matrix: List[List]) -> str:
 if __name__ == '__main__':
     llist = construct_linked_list([0, 1, 2, 3, 4, 5])
     btree = construct_btree([3, 9, 20, None, None, 15, 7, None, None, None, None, 222, None, 6])
+    # btree = construct_btree([1, 2, 3, 4, 5])
     # btree = construct_btree([3, 9, 20, 8, 16, 15, 7, 1, 2, None, None, 3])
     a = btree_to_list(btree)
     mat = [[3, 0, 8, 4], [2, 4, 5, 7], [9, 2, 6, 3], [0, 3, 1, 2340]]
