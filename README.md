@@ -1,5 +1,5 @@
 # LeetNode
-A small Python 3 library to make doing LeetCode linked list, binary tree and matrix problems more convenient.
+A small Python 3.6+ library to make doing LeetCode linked list, binary tree and matrix problems more convenient.
 
 ## Linked Lists
 ### Building a linked list from a list
