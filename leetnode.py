@@ -23,14 +23,14 @@ class TreeNode(Generic[T]):
         return construct_btree(arr)
 
     def to_list(self) -> List[T]:
-        def get_length(i, node):
+        def get_last_index(i, node):
             if node.left is None:
                 if node.right is None:
                     return i
-                return get_length((i << 1) + 2, node.right)
+                return get_last_index((i << 1) + 2, node.right)
             if node.right is None:
-                return get_length((i << 1) + 1, node.left)
-            return max(get_length((i << 1) + 1, node.left), get_length((i << 1) + 2, node.right))
+                return get_last_index((i << 1) + 1, node.left)
+            return max(get_last_index((i << 1) + 1, node.left), get_last_index((i << 1) + 2, node.right))
 
         def flatten(i, node):
             nonlocal arr
@@ -39,7 +39,7 @@ class TreeNode(Generic[T]):
                 flatten((i << 1) + 1, node.left)
                 flatten((i << 1) + 2, node.right)
 
-        arr = [None] * (get_length(0, self) + 1)
+        arr = [None] * (get_last_index(0, self) + 1)
         flatten(0, self)
         return arr
 
