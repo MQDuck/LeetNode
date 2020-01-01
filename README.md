@@ -1,5 +1,5 @@
 # LeetNode
-A small Python 3.6+ library to make doing LeetCode binary tree, linked list and matrix problems more convenient.
+A small Python 3.6+ library to make debugging LeetCode binary tree, linked list and matrix problems more convenient.
 
 ## Binary Trees
 `from leetnode import TreeNode, construct_btree`
