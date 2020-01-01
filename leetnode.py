@@ -1,15 +1,17 @@
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import List, Optional, Generic, TypeVar
+
+T = TypeVar('T')
 
 
-class TreeNode:
-    def __init__(self, val):
+class TreeNode(Generic[T]):
+    def __init__(self, val: T):
         self.val = val
         self.left = None
         self.right = None
 
-    def __iter__(self):
+    def __iter__(self) -> T:
         for val in self.to_list():
             yield val
 
@@ -17,10 +19,10 @@ class TreeNode:
         return str(self.to_list())
 
     @staticmethod
-    def from_list(arr: List) -> Optional[TreeNode]:
+    def from_list(arr: List[T]) -> Optional[TreeNode[T]]:
         return construct_btree(arr)
 
-    def to_list(self) -> List:
+    def to_list(self) -> List[T]:
         def get_length(i, node):
             if node.left is None:
                 if node.right is None:
@@ -41,11 +43,51 @@ class TreeNode:
         flatten(0, self)
         return arr
 
-    def to_tree_string(self) -> str:
-        return btree_to_string(self, True)
+    def to_tree_string(self, draw_branches=True) -> str:
+        arr = self.to_list()
+
+        item_spacing = max([1 if item is None else len(str(item)) for item in arr])
+        height = int.bit_length(len(arr)) - 1
+
+        str_arr = []
+        i = 0
+        for level in range(height + 1):
+            spacing_margin = ((1 << (height - level)) - 1) * item_spacing
+            spacing_middle = ((1 << (height - level + 1)) - 1) * item_spacing
+            end = min(i + (1 << level), len(arr))
+            j = i
+
+            str_arr.append(' ' * spacing_margin)
+            for i in range(i, end):
+                str_arr.append(' ' * item_spacing if arr[i] is None else f'{arr[i]:^{item_spacing}}')
+                if i != end:
+                    str_arr.append(' ' * spacing_middle)
+            i += 1
+            while str_arr[-1].isspace():
+                str_arr = str_arr[0:-1]
+            str_arr.append('\n')
+
+            if draw_branches and level != height:
+                str_arr.append(' ' * (spacing_margin - 1))
+                for j in range(j, end):
+                    if arr[j] is None:
+                        str_arr.append(' ' * (item_spacing + 2))
+                    else:
+                        left = (j << 1) + 1
+                        right = (j << 1) + 2
+                        str_arr.append(' ' if left >= len(arr) or arr[left] is None else '/')
+                        str_arr.append(' ' * item_spacing)
+                        str_arr.append(' ' if right >= len(arr) or arr[right] is None else '\\')
+                    if j != end:
+                        str_arr.append(' ' * (spacing_middle - 2))
+                while str_arr[-1].isspace():
+                    str_arr = str_arr[0:-1]
+                str_arr.append('\n')
+
+        return ''.join(str_arr[0:-1])
 
 
-def construct_btree(arr: List) -> Optional[TreeNode]:
+def construct_btree(arr: List[T]) -> Optional[TreeNode[T]]:
     if not arr or arr[0] is None:
         return None
 
@@ -64,61 +106,12 @@ def construct_btree(arr: List) -> Optional[TreeNode]:
     return root
 
 
-def btree_list_to_string(arr: List, draw_branches=True) -> str:
-    if not arr:
-        return ''
-
-    item_spacing = max([1 if item is None else len(str(item)) for item in arr])
-    height = int.bit_length(len(arr)) - 1
-
-    str_arr = []
-    i = 0
-    for level in range(height + 1):
-        spacing_margin = ((1 << (height - level)) - 1) * item_spacing
-        spacing_middle = ((1 << (height - level + 1)) - 1) * item_spacing
-        end = min(i + (1 << level), len(arr))
-        j = i
-
-        str_arr.append(' ' * spacing_margin)
-        for i in range(i, end):
-            str_arr.append(' ' * item_spacing if arr[i] is None else f'{arr[i]:^{item_spacing}}')
-            if i != end:
-                str_arr.append(' ' * spacing_middle)
-        i += 1
-        while str_arr[-1].isspace():
-            str_arr = str_arr[0:-1]
-        str_arr.append('\n')
-
-        if draw_branches and level != height:
-            str_arr.append(' ' * (spacing_margin - 1))
-            for j in range(j, end):
-                if arr[j] is None:
-                    str_arr.append(' ' * (item_spacing + 2))
-                else:
-                    left = (j << 1) + 1
-                    right = (j << 1) + 2
-                    str_arr.append(' ' if left >= len(arr) or arr[left] is None else '/')
-                    str_arr.append(' ' * item_spacing)
-                    str_arr.append(' ' if right >= len(arr) or arr[right] is None else '\\')
-                if j != end:
-                    str_arr.append(' ' * (spacing_middle - 2))
-            while str_arr[-1].isspace():
-                str_arr = str_arr[0:-1]
-            str_arr.append('\n')
-
-    return ''.join(str_arr[0:-1])
-
-
-def btree_to_string(root: TreeNode, draw_branches=True) -> str:
-    return btree_list_to_string(root.to_list(), draw_branches)
-
-
-class ListNode:
-    def __init__(self, val):
+class ListNode(Generic[T]):
+    def __init__(self, val: T):
         self.val = val
         self.next = None
 
-    def __iter__(self):
+    def __iter__(self) -> T:
         current = self
         while current is not None:
             yield current.val
@@ -128,11 +121,11 @@ class ListNode:
         return str(list(self))
 
     @staticmethod
-    def from_list(arr: list) -> Optional[ListNode]:
+    def from_list(arr: List[T]) -> Optional[ListNode[T]]:
         return construct_linked_list(arr)
 
 
-def construct_linked_list(arr: List) -> Optional[ListNode]:
+def construct_linked_list(arr: List[T]) -> Optional[ListNode[T]]:
     if not arr:
         return None
 
@@ -170,9 +163,9 @@ if __name__ == '__main__':
     btree1 = construct_btree([3, 9, 20, None, None, 15, 7, None, None, None, None, 222, None, 6])
     btree2 = TreeNode.from_list([3, 9, 20, 8, 16, 15, 7, 1, 2, None, None, 3])
     print(btree1)
-    print(btree_to_string(btree1))
+    print(btree1.to_tree_string())
     print(btree2)
-    print(btree_to_string(btree2))
+    print(btree2.to_tree_string())
     print()
 
     mat = [[3, 0, 8, 4], [2, 4, 5, 7], [9, 2, 6, 3], [0, 3, 1, 2340]]
