@@ -114,11 +114,11 @@ class ListNode(Generic[T]):
     def __iter__(self) -> T:
         current = self
         while current is not None:
-            yield current.val
+            yield current
             current = current.next
 
     def __repr__(self) -> str:
-        return str(list(self))
+        return str([node.val for node in list(self)])
 
     @staticmethod
     def from_list(arr: List[T]) -> Optional[ListNode[T]]:
@@ -154,10 +154,12 @@ def matrix_to_string(matrix: List[List]) -> str:
 
 
 if __name__ == '__main__':
-    llist1 = build_linked_list([0, 1, 2, 3, 4, 5])
-    llist2 = ListNode.from_list(['a', 'b', 'c', 'd'])
+    llist1 = build_linked_list(['a', 'b', 'c', 'd'])
+    llist2 = ListNode.from_list(['e', 'f', 'g', 'h'])
     print(llist1)
     print(llist2)
+    for node in llist1:
+        print(node.val + node.next.val if node.next is not None else node.val)
     print()
 
     btree1 = build_btree([3, 9, 20, 8, 16, 15, 7, 1, 2, None, None, 3])
