@@ -2,7 +2,7 @@
 A small Python 3.6+ library to make debugging LeetCode binary tree, linked list and matrix problems more convenient.
 
 ## Binary Trees
-`from leetnode import TreeNode, construct_btree`
+`from leetnode import TreeNode, build_btree`
 
 ### Creating a binary tree node
 `btree_node = TreeNode('val')`
