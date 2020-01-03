@@ -43,7 +43,7 @@ class TreeNode(Generic[T]):
         flatten(0, self)
         return arr
 
-    def to_tree_string(self, draw_branches=True) -> str:
+    def tree_string(self, draw_branches=True) -> str:
         arr = self.to_list()
 
         item_spacing = max([1 if item is None else len(str(item)) for item in arr])
@@ -118,7 +118,7 @@ class ListNode(Generic[T]):
             current = current.next
 
     def __repr__(self) -> str:
-        return str([node.val for node in list(self)])
+        return '[' + ' -> '.join([repr(node.val) for node in list(self)]) + ']'
 
     @staticmethod
     def from_list(arr: List[T]) -> Optional[ListNode[T]]:
@@ -158,16 +158,16 @@ if __name__ == '__main__':
     llist2 = ListNode.from_list(['e', 'f', 'g', 'h'])
     print(llist1)
     print(llist2)
-    for node in llist1:
-        print(node.val + node.next.val if node.next is not None else node.val)
+    for list_node in llist1:
+        print(list_node.val + list_node.next.val if list_node.next is not None else list_node.val)
     print()
 
     btree1 = build_btree([3, 9, 20, 8, 16, 15, 7, 1, 2, None, None, 3])
     btree2 = TreeNode.from_list([3, 9, 20, None, 42, 15, 7, None, None, None, None, 222, 13, 6])
     print(btree1)
-    print(btree1.to_tree_string())
+    print(btree1.tree_string())
     print(btree2)
-    print(btree2.to_tree_string())
+    print(btree2.tree_string())
     print()
 
     mat1 = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
