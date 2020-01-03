@@ -1,7 +1,8 @@
 from __future__ import annotations
 
+import json
 from collections import deque
-from typing import List, Optional, Generic, TypeVar
+from typing import List, Optional, Generic, TypeVar, Union
 
 T = TypeVar('T')
 
@@ -20,7 +21,7 @@ class TreeNode(Generic[T]):
         return str(self.to_list())
 
     @staticmethod
-    def from_list(arr: List[T]) -> Optional[TreeNode[T]]:
+    def from_list(arr: Union[List[T], str]) -> Optional[TreeNode[T]]:
         return build_btree(arr)
 
     def to_list(self) -> List[T]:
@@ -100,7 +101,10 @@ class TreeNode(Generic[T]):
         return '\n' + '\n'.join((line.rstrip() for line in _build_tree_string(self, 0)[0]))
 
 
-def build_btree(arr: List[T]) -> Optional[TreeNode[T]]:
+def build_btree(arr: Union[List[T], str]) -> Optional[TreeNode[T]]:
+    if isinstance(arr, str):
+        arr = json.loads(arr)
+
     if not arr or arr[0] is None:
         return None
 
@@ -182,6 +186,14 @@ if __name__ == '__main__':
     print(btree1.tree_string())
     print(btree2)
     print(btree2.tree_string())
+    print()
+
+    btree3 = build_btree('[1,2,3,null,null,4,5]')
+    btree4 = TreeNode.from_list('[1,null,555555,null,43,1]')
+    print(btree3)
+    print(btree3.tree_string())
+    print(btree4)
+    print(btree4.tree_string())
     print()
 
     mat1 = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
