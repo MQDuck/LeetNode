@@ -43,65 +43,61 @@ class TreeNode(Generic[T]):
                 arr.append(None)
         return arr[:last_non_none]
 
-    def tree_string(self, draw_branches=True) -> str:
-        def get_last_index(i, node):
-            if node.left is None:
-                if node.right is None:
-                    return i
-                return get_last_index((i << 1) + 2, node.right)
-            if node.right is None:
-                return get_last_index((i << 1) + 1, node.left)
-            return max(get_last_index((i << 1) + 1, node.left), get_last_index((i << 1) + 2, node.right))
+    def tree_string(self) -> str:
+        def _build_tree_string(root: TreeNode[T], curr_index: int) -> (List[str], int, int, int):
+            if root is None:
+                return [], 0, 0, 0
 
-        def flatten(i, node):
-            nonlocal arr
-            if node is not None:
-                arr[i] = node.val
-                flatten((i << 1) + 1, node.left)
-                flatten((i << 1) + 2, node.right)
+            line1 = []
+            line2 = []
+            node_repr = str(root.val)
 
-        arr = [None] * (get_last_index(0, self) + 1)
-        flatten(0, self)
+            new_root_width = gap_size = len(node_repr)
 
-        item_spacing = max([1 if item is None else len(str(item)) for item in arr])
-        height = int.bit_length(len(arr)) - 1
+            # Get the left and right sub-boxes, their widths, and root repr positions
+            l_box, l_box_width, l_root_start, l_root_end = _build_tree_string(root.left, 2 * curr_index + 1)
+            r_box, r_box_width, r_root_start, r_root_end = _build_tree_string(root.right, 2 * curr_index + 2)
 
-        str_arr = []
-        i = 0
-        for level in range(height + 1):
-            spacing_margin = ((1 << (height - level)) - 1) * item_spacing
-            spacing_middle = ((1 << (height - level + 1)) - 1) * item_spacing
-            end = min(i + (1 << level), len(arr))
-            j = i
+            # Draw the branch connecting the current root node to the left sub-box
+            # Pad the line with whitespaces where necessary
+            if l_box_width > 0:
+                l_root = (l_root_start + l_root_end) // 2 + 1
+                line1.append(' ' * (l_root + 1))
+                line1.append('_' * (l_box_width - l_root))
+                line2.append(' ' * l_root + '/')
+                line2.append(' ' * (l_box_width - l_root))
+                new_root_start = l_box_width + 1
+                gap_size += 1
+            else:
+                new_root_start = 0
 
-            str_arr.append(' ' * spacing_margin)
-            for i in range(i, end):
-                str_arr.append(' ' * item_spacing if arr[i] is None else f'{arr[i]:^{item_spacing}}')
-                if i != end:
-                    str_arr.append(' ' * spacing_middle)
-            i += 1
-            while str_arr[-1].isspace():
-                str_arr = str_arr[0:-1]
-            str_arr.append('\n')
+            # Draw the representation of the current root node
+            line1.append(node_repr)
+            line2.append(' ' * new_root_width)
 
-            if draw_branches and level != height:
-                str_arr.append(' ' * (spacing_margin - 1))
-                for j in range(j, end):
-                    if arr[j] is None:
-                        str_arr.append(' ' * (item_spacing + 2))
-                    else:
-                        left = (j << 1) + 1
-                        right = (j << 1) + 2
-                        str_arr.append(' ' if left >= len(arr) or arr[left] is None else '/')
-                        str_arr.append(' ' * item_spacing)
-                        str_arr.append(' ' if right >= len(arr) or arr[right] is None else '\\')
-                    if j != end:
-                        str_arr.append(' ' * (spacing_middle - 2))
-                while str_arr[-1].isspace():
-                    str_arr = str_arr[0:-1]
-                str_arr.append('\n')
+            # Draw the branch connecting the current root node to the right sub-box
+            # Pad the line with whitespaces where necessary
+            if r_box_width > 0:
+                r_root = (r_root_start + r_root_end) // 2
+                line1.append('_' * r_root)
+                line1.append(' ' * (r_box_width - r_root + 1))
+                line2.append(' ' * r_root + '\\')
+                line2.append(' ' * (r_box_width - r_root))
+                gap_size += 1
+            new_root_end = new_root_start + new_root_width - 1
 
-        return ''.join(str_arr[0:-1])
+            # Combine the left and right sub-boxes with the branches drawn above
+            gap = ' ' * gap_size
+            new_box = [''.join(line1), ''.join(line2)]
+            for i in range(max(len(l_box), len(r_box))):
+                l_line = l_box[i] if i < len(l_box) else ' ' * l_box_width
+                r_line = r_box[i] if i < len(r_box) else ' ' * r_box_width
+                new_box.append(l_line + gap + r_line)
+
+            # Return the new box, its width and its root repr positions
+            return new_box, len(new_box[0]), new_root_start, new_root_end
+
+        return '\n' + '\n'.join((line.rstrip() for line in _build_tree_string(self, 0)[0]))
 
 
 def build_btree(arr: List[T]) -> Optional[TreeNode[T]]:
@@ -181,7 +177,7 @@ if __name__ == '__main__':
     print()
 
     btree1 = build_btree([3, 9, 20, 8, 16, 15, 7, 1, 2, None, None, 3, None, None, None, None, None, 12])
-    btree2 = TreeNode.from_list([3, 9, 20, None, 42, 15, 7, None, None, None, None, 222, 13, 6])
+    btree2 = TreeNode.from_list([5, 9, 20, None, 42, 15, 7, None, None, None, None, 222, 13, 6])
     print(btree1)
     print(btree1.tree_string())
     print(btree2)
