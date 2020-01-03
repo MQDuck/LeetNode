@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections import deque
 from typing import List, Optional, Generic, TypeVar
 
 T = TypeVar('T')
@@ -23,6 +24,26 @@ class TreeNode(Generic[T]):
         return build_btree(arr)
 
     def to_list(self) -> List[T]:
+        arr = [self.val]
+        last_non_none = 1
+        nodes = deque([self])
+        while nodes:
+            node = nodes.popleft()
+            if node.left:
+                arr.append(node.left.val)
+                last_non_none = len(arr)
+                nodes.append(node.left)
+            else:
+                arr.append(None)
+            if node.right:
+                arr.append(node.right.val)
+                last_non_none = len(arr)
+                nodes.append(node.right)
+            else:
+                arr.append(None)
+        return arr[:last_non_none]
+
+    def tree_string(self, draw_branches=True) -> str:
         def get_last_index(i, node):
             if node.left is None:
                 if node.right is None:
@@ -41,10 +62,6 @@ class TreeNode(Generic[T]):
 
         arr = [None] * (get_last_index(0, self) + 1)
         flatten(0, self)
-        return arr
-
-    def tree_string(self, draw_branches=True) -> str:
-        arr = self.to_list()
 
         item_spacing = max([1 if item is None else len(str(item)) for item in arr])
         height = int.bit_length(len(arr)) - 1
@@ -91,18 +108,19 @@ def build_btree(arr: List[T]) -> Optional[TreeNode[T]]:
     if not arr or arr[0] is None:
         return None
 
-    def construct(i, node):
-        nonlocal arr
-        if (i << 1) + 1 < len(arr):
-            if arr[(i << 1) + 1] is not None:
-                node.left = TreeNode(arr[(i << 1) + 1])
-                construct((i << 1) + 1, node.left)
-            if (i << 1) + 2 < len(arr) and arr[(i << 1) + 2] is not None:
-                node.right = TreeNode(arr[(i << 1) + 2])
-                construct((i << 1) + 2, node.right)
+    nodes = [TreeNode(val) if val else None for val in arr]
+    children = nodes[::-1]
+    root = children.pop()
+    if children:
+        for node in nodes:
+            if node:
+                node.left = children.pop()
+                if not children:
+                    break
+                node.right = children.pop()
+                if not children:
+                    break
 
-    root = TreeNode(arr[0])
-    construct(0, root)
     return root
 
 
@@ -162,7 +180,7 @@ if __name__ == '__main__':
         print(list_node.val + list_node.next.val if list_node.next is not None else list_node.val)
     print()
 
-    btree1 = build_btree([3, 9, 20, 8, 16, 15, 7, 1, 2, None, None, 3])
+    btree1 = build_btree([3, 9, 20, 8, 16, 15, 7, 1, 2, None, None, 3, None, None, None, None, None, 12])
     btree2 = TreeNode.from_list([3, 9, 20, None, 42, 15, 7, None, None, None, None, 222, 13, 6])
     print(btree1)
     print(btree1.tree_string())
