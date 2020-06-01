@@ -8,6 +8,8 @@ T = TypeVar('T')
 
 
 class TreeNode(Generic[T]):
+    """A binary tree node."""
+
     def __init__(self, val: T):
         self.val = val
         self.left = None
@@ -25,6 +27,11 @@ class TreeNode(Generic[T]):
         return build_btree(arr)
 
     def to_list(self) -> List[T]:
+        """Flatten a binary tree of TreeNodes to a list of node values. This is the inverse of
+        build_tree()/TreeNode.from_list()
+
+        :return: List of node values.
+        """
         arr = [self.val]
         last_non_none = 1
         nodes = deque([self])
@@ -45,19 +52,37 @@ class TreeNode(Generic[T]):
         return arr[:last_non_none]
 
     def tree_string(self) -> str:
-        def _build_tree_string(root: TreeNode[T], curr_index: int) -> (List[str], int, int, int):
+        """Return a pretty-print string for the binary tree.
+
+        :return: Pretty-print string.
+        """
+
+        def build(root: TreeNode[T], curr_index: int) -> (List[str], int, int, int):
+            """Recursively walk down the binary tree and build a pretty-print string.
+
+            In each recursive call, a "box" of characters visually representing the current (sub)tree is constructed
+            line by line. Each line is padded with whitespaces to ensure all lines in the box have the same length.
+            Then the box, its width, and start-end positions of its root node value repr string (required for drawing
+            branches) are sent up to the parent call. The parent call then combines its left and right sub-boxes to
+            build a larger box etc.
+
+            :param root: Root node of the binary tree.
+            :param curr_index: Level-order_ index of the current node (root node is 0).
+            :return: Box of characters visually representing the current subtree, width of the box, and start-end
+                positions of the repr string of the new root node value.
+            """
             if root is None:
                 return [], 0, 0, 0
 
             line1 = []
             line2 = []
-            node_repr = str(root.val)
+            node_repr = repr(root.val)
 
             new_root_width = gap_size = len(node_repr)
 
             # Get the left and right sub-boxes, their widths, and root repr positions
-            l_box, l_box_width, l_root_start, l_root_end = _build_tree_string(root.left, 2 * curr_index + 1)
-            r_box, r_box_width, r_root_start, r_root_end = _build_tree_string(root.right, 2 * curr_index + 2)
+            l_box, l_box_width, l_root_start, l_root_end = build(root.left, 2 * curr_index + 1)
+            r_box, r_box_width, r_root_start, r_root_end = build(root.right, 2 * curr_index + 2)
 
             # Draw the branch connecting the current root node to the left sub-box
             # Pad the line with whitespaces where necessary
@@ -98,10 +123,16 @@ class TreeNode(Generic[T]):
             # Return the new box, its width and its root repr positions
             return new_box, len(new_box[0]), new_root_start, new_root_end
 
-        return '\n' + '\n'.join((line.rstrip() for line in _build_tree_string(self, 0)[0]))
+        return '\n' + '\n'.join((line.rstrip() for line in build(self, 0)[0]))
 
 
 def build_btree(arr: Union[List[T], str]) -> Optional[TreeNode[T]]:
+    """Build a binary tree of TreeNodes from a list or JSON array string. If building from a list, this is the inverse
+    of TreeNode.to_list().
+
+    :param arr: List or JSON array of node values.
+    :return: Root TreeNode of the binary tree.
+    """
     if isinstance(arr, str):
         arr = json.loads(arr)
 
@@ -125,6 +156,8 @@ def build_btree(arr: Union[List[T], str]) -> Optional[TreeNode[T]]:
 
 
 class ListNode(Generic[T]):
+    """A linked list node."""
+
     def __init__(self, val: T):
         self.val = val
         self.next = None
@@ -144,6 +177,12 @@ class ListNode(Generic[T]):
 
 
 def build_linked_list(arr: List[T]) -> Optional[ListNode[T]]:
+    """Build a linked list of ListNodes from a list or JSON array string. If building from a list, this is the inverse
+    of ListNode.to_list().
+
+    :param arr:
+    :return:
+    """
     if not arr:
         return None
 
@@ -156,6 +195,11 @@ def build_linked_list(arr: List[T]) -> Optional[ListNode[T]]:
 
 
 def matrix_to_string(matrix: List[List]) -> str:
+    """Return a pretty-print string for a matrix.
+
+    :param matrix: A two dimensional list.
+    :return: Pretty-print string.
+    """
     if not isinstance(matrix, List) or len(matrix) == 0 or not isinstance(matrix[0], List):
         raise TypeError
 
@@ -172,31 +216,35 @@ def matrix_to_string(matrix: List[List]) -> str:
 
 
 if __name__ == '__main__':
-    llist1 = build_linked_list(['a', 'b', 'c', 'd'])
-    llist2 = ListNode.from_list(['e', 'f', 'g', 'h'])
-    print(llist1)
-    print(llist2)
-    for list_node in llist1:
-        print(list_node.val + list_node.next.val if list_node.next is not None else list_node.val)
-    print()
+    def demo():
+        llist1 = build_linked_list(['a', 'b', 'c', 'd'])
+        llist2 = ListNode.from_list(['e', 'f', 'g', 'h'])
+        print(llist1)
+        print(llist2)
+        for list_node in llist1:
+            print(list_node.val + list_node.next.val if list_node.next is not None else list_node.val)
+        print()
 
-    btree1 = build_btree([3, 9, 20, 8, 16, 15, 7, 1, 2, None, None, 3, None, None, None, None, None, 12])
-    btree2 = TreeNode.from_list([5, 9, 20, None, 42, 15, 7, None, None, None, None, 222, 13, 6])
-    print(btree1)
-    print(btree1.tree_string())
-    print(btree2)
-    print(btree2.tree_string())
-    print()
+        btree1 = build_btree([3, 9, 20, 8, 16, 15, 7, 1, 2, None, None, 3, None, None, None, None, None, 12])
+        btree2 = TreeNode.from_list(['a', 'b', 'cd', None, 'ef', 'gh', 'i', None, None, None, None, 'jkl', 'mn', 'o'])
+        print(btree1)
+        print(btree1.tree_string())
+        print(btree2)
+        print(btree2.tree_string())
+        print()
 
-    btree3 = build_btree('[1,2,3,null,null,4,5]')
-    btree4 = TreeNode.from_list('[1,null,555555,null,43,1]')
-    print(btree3)
-    print(btree3.tree_string())
-    print(btree4)
-    print(btree4.tree_string())
-    print()
+        btree3 = build_btree('[1,2,3,null,null,4,5]')
+        btree4 = TreeNode.from_list('[1,null,555555,null,43,1]')
+        print(btree3)
+        print(btree3.tree_string())
+        print(btree4)
+        print(btree4.tree_string())
+        print()
 
-    mat1 = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-    mat2 = [[3, 0, 8, 4], [2, 2340, 5, 7], [97, 2, 6, 3], [0, 3, 1, 13]]
-    print(matrix_to_string(mat1))
-    print(matrix_to_string(mat2))
+        mat1 = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+        mat2 = [[3, 0, 8, 4], [2, 2340, 5, 7], [97, 2, 6, 3], [0, 3, 1, 13]]
+        print(matrix_to_string(mat1))
+        print(matrix_to_string(mat2))
+
+
+    demo()
