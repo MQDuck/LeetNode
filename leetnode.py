@@ -57,6 +57,9 @@ class TreeNode(Generic[T]):
         :return: Pretty-print string.
         """
 
+        # This method is based on binarytree by Joohwan Oh.
+        # https://binarytree.readthedocs.io/en/latest/
+
         def build(root: TreeNode[T], curr_index: int) -> (List[str], int, int, int):
             """Recursively walk down the binary tree and build a pretty-print string.
 
