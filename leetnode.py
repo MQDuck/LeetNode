@@ -123,10 +123,10 @@ class TreeNode(Generic[T]):
             # Return the new box, its width and its root repr positions
             return new_box, len(new_box[0]), new_root_start, new_root_end
 
-        return '\n' + '\n'.join((line.rstrip() for line in build(self, 0)[0]))
+        return '\n'.join((line.rstrip() for line in build(self, 0)[0]))[:-1]
 
 
-def build_btree(arr: Union[List[T], str]) -> Optional[TreeNode[T]]:
+def build_btree(arr: Union[List[T], str, None]) -> Optional[TreeNode[T]]:
     """Build a binary tree of TreeNodes from a list or JSON array string. If building from a list, this is the inverse
     of TreeNode.to_list().
 
@@ -136,9 +136,14 @@ def build_btree(arr: Union[List[T], str]) -> Optional[TreeNode[T]]:
     if isinstance(arr, str):
         arr = json.loads(arr)
 
+    if not isinstance(arr, List) and arr is not None:
+        raise TypeError
+
     if not arr or arr[0] is None:
         return None
 
+    # Because the linter is bugged:
+    # noinspection PyTypeChecker
     nodes = [TreeNode(val) if val else None for val in arr]
     children = nodes[::-1]
     root = children.pop()
@@ -172,17 +177,23 @@ class ListNode(Generic[T]):
         return '[' + ' -> '.join([repr(node.val) for node in list(self)]) + ']'
 
     @staticmethod
-    def from_list(arr: List[T]) -> Optional[ListNode[T]]:
+    def from_list(arr: Union[List[T], str]) -> Optional[ListNode[T]]:
         return build_linked_list(arr)
 
 
-def build_linked_list(arr: List[T]) -> Optional[ListNode[T]]:
+def build_linked_list(arr: Union[List[T], str, None]) -> Optional[ListNode[T]]:
     """Build a linked list of ListNodes from a list or JSON array string. If building from a list, this is the inverse
     of ListNode.to_list().
 
     :param arr:
     :return:
     """
+    if isinstance(arr, str):
+        arr = json.loads(arr)
+
+    if not isinstance(arr, List) and arr is not None:
+        raise TypeError
+
     if not arr:
         return None
 
@@ -194,12 +205,15 @@ def build_linked_list(arr: List[T]) -> Optional[ListNode[T]]:
     return head
 
 
-def matrix_to_string(matrix: List[List]) -> str:
+def matrix_to_string(matrix: Union[List[List], str]) -> str:
     """Return a pretty-print string for a matrix.
 
     :param matrix: A two dimensional list.
     :return: Pretty-print string.
     """
+    if isinstance(matrix, str):
+        matrix = json.loads(matrix)
+
     if not isinstance(matrix, List) or len(matrix) == 0 or not isinstance(matrix[0], List):
         raise TypeError
 
@@ -218,27 +232,24 @@ def matrix_to_string(matrix: List[List]) -> str:
 if __name__ == '__main__':
     def demo():
         llist1 = build_linked_list(['a', 'b', 'c', 'd'])
-        llist2 = ListNode.from_list(['e', 'f', 'g', 'h'])
+        llist2 = build_linked_list([1, 2, 3, 4, 5])
+        llist3 = ListNode.from_list('["e", "f", "g", "h"]')
         print(llist1)
         print(llist2)
+        print(llist3)
         for list_node in llist1:
             print(list_node.val + list_node.next.val if list_node.next is not None else list_node.val)
         print()
 
         btree1 = build_btree([3, 9, 20, 8, 16, 15, 7, 1, 2, None, None, 3, None, None, None, None, None, 12])
         btree2 = TreeNode.from_list(['a', 'b', 'cd', None, 'ef', 'gh', 'i', None, None, None, None, 'jkl', 'mn', 'o'])
+        btree3 = TreeNode.from_list('[1,null,555555,null,43,1]')
         print(btree1)
         print(btree1.tree_string())
         print(btree2)
         print(btree2.tree_string())
-        print()
-
-        btree3 = build_btree('[1,2,3,null,null,4,5]')
-        btree4 = TreeNode.from_list('[1,null,555555,null,43,1]')
         print(btree3)
         print(btree3.tree_string())
-        print(btree4)
-        print(btree4.tree_string())
         print()
 
         mat1 = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
