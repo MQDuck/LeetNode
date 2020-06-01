@@ -74,19 +74,21 @@ or, from a JSON string
 
 or
 
-`llist2 = ListNode.from_list(['e', 'f', 'g', 'h'])`
+`llist2 = build_linked_list([1, 2, 3, 4, 5])`
 
 or, from a JSON string
 
-`llist3 = build_linked_list('1, 2, 3, 4, 5')`
+`llist3 = ListNode.from_list('["e", "f", "g", "h"]')`
 
 ### Printing a linked list
     >>> print(llist1)
     ['a' -> 'b' -> 'c' -> 'd']
+    
     >>> print(llist2)
-    ['e' -> 'f' -> 'g' -> 'h']
+    [1 -> 2 -> 3 -> 4 -> 5]
+    
     >>> print(llist3)
-    ['1' -> ',' -> ' ' -> '2' -> ',' -> ' ' -> '3' -> ',' -> ' ' -> '4' -> ',' -> ' ' -> '5']
+    ['e' -> 'f' -> 'g' -> 'h']
 
 ### Iterating over a linked list
     >>> for node in llist1:
