@@ -235,7 +235,7 @@ def matrix_to_string(matrix: Union[List[List], str]) -> str:
 if __name__ == '__main__':
     def demo():
         llist1 = build_linked_list(['a', 'b', 'c', 'd'])
-        llist2 = build_linked_list([1, 2, 3, 4, 5])
+        llist2 = ListNode.from_list([1, 2, 3, 4, 5])
         llist3 = ListNode.from_list('["e", "f", "g", "h"]')
         print(llist1)
         print(llist2)

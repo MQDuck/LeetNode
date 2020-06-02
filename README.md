@@ -74,7 +74,7 @@ or, from a JSON string
 
 or
 
-`llist2 = build_linked_list([1, 2, 3, 4, 5])`
+`llist2 = ListNode.from_list([1, 2, 3, 4, 5])`
 
 or, from a JSON string
 
