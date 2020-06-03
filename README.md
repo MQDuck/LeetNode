@@ -1,5 +1,5 @@
 # LeetNode
-A small Python 3.6+ library to make debugging LeetCode binary tree, linked list and matrix problems more convenient.
+A small Python 3.5+ library to make debugging LeetCode binary tree, linked list and matrix problems more convenient.
 
 ## Binary Trees
 `from leetnode import TreeNode, build_btree`
@@ -103,6 +103,7 @@ or, from a JSON string
 ### Printing a matrix
     >>> mat1 = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     >>> mat2 = [[3, 0, 8, 4], [2, 2340, 5, 7], [97, 2, 6, 3], [0, 3, 1, 13]]
+    >>> mat3 = '[["a", "b", "ccc"], ["dd", "e", "ff"], ["g", "h", "i"]]'
     
     >>> print(matrix_to_string(mat1))
     [ [ 1, 2, 3 ],
@@ -114,3 +115,8 @@ or, from a JSON string
       [    2, 2340,    5,    7 ],
       [   97,    2,    6,    3 ],
       [    0,    3,    1,   13 ] ]
+
+    >>> print(matrix_to_string(mat3) + '\n')
+    [ [   'a',   'b', 'ccc' ],
+      [  'dd',   'e',  'ff' ],
+      [   'g',   'h',   'i' ] ]

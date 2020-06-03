@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="leetnode",
-    version="1.0.2",
+    version="1.0.3",
     author="Jeffrey Thomas Piercy",
     author_email="mqduck@mqduck.net",
     description="A small Python 3.5+ library to make debugging LeetCode binary tree, linked list and matrix problems "
