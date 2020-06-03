@@ -5,10 +5,10 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="leetnode",
-    version="1.0.0",
+    version="1.0.2",
     author="Jeffrey Thomas Piercy",
     author_email="mqduck@mqduck.net",
-    description="A small Python 3.6+ library to make debugging LeetCode binary tree, linked list and matrix problems "
+    description="A small Python 3.5+ library to make debugging LeetCode binary tree, linked list and matrix problems "
                 "more convenient.",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -19,5 +19,5 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.5',
 )

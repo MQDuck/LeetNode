@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import json
 from collections import deque
 from typing import List, Optional, Generic, TypeVar, Union
@@ -23,7 +21,7 @@ class TreeNode(Generic[T]):
         return str(self.to_list())
 
     @staticmethod
-    def from_list(arr: Union[List[T], str]) -> Optional[TreeNode[T]]:
+    def from_list(arr: Union[List[T], str]) -> Optional:
         return build_btree(arr)
 
     def to_list(self) -> List[T]:
@@ -180,7 +178,7 @@ class ListNode(Generic[T]):
         return '[' + ' -> '.join([repr(node.val) for node in list(self)]) + ']'
 
     @staticmethod
-    def from_list(arr: Union[List[T], str]) -> Optional[ListNode[T]]:
+    def from_list(arr: Union[List[T], str]) -> Optional:
         return build_linked_list(arr)
 
 
@@ -194,10 +192,10 @@ def build_linked_list(arr: Union[List[T], str, None]) -> Optional[ListNode[T]]:
     if isinstance(arr, str):
         arr = json.loads(arr)
 
-    if not isinstance(arr, List) and arr is not None:
+    if not isinstance(arr, List):
         raise TypeError
 
-    if not arr:
+    if len(arr) == 0:
         return None
 
     head = ListNode(arr[0])
