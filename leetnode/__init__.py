@@ -223,17 +223,18 @@ def matrix_to_string(matrix: Union[List[List], str]) -> str:
     del lengths
 
     if isinstance(matrix[0][0], int):
-        def format_item(item):
+        def format_item(item, _):
             return ('{item:>' + str(item_spacing) + '}, ').format(item=repr(item))
     else:
-        def format_item(item):
+        def format_item(item, comma):
             item_repr = repr(item)
-            return item_repr + ',' + ' ' * (item_spacing - len(item_repr) + 1)
+            return item_repr + comma + ' ' * (item_spacing - len(item_repr) + 1)
 
     str_arr = []
     for i in range(len(matrix)):
         str_arr.append('[ [ ' if i == 0 else '  [ ')
-        str_arr.append(''.join([format_item(item) for item in matrix[i]])[:-2] + ' ]')
+        str_arr.append(''.join([format_item(item, ' ' if index == len(matrix[i]) - 1 else ',') for index, item in
+                                enumerate(matrix[i])]) + ' ]')
         str_arr.append(' ]' if i == len(matrix) - 1 else ',\n')
     return ''.join(str_arr)
 
