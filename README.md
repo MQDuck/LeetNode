@@ -16,7 +16,7 @@ or
 
 or, from a JSON string
 
-`btree3 = TreeNode.from_list('[1,null,555555,null,43,1]')`
+`btree3 = TreeNode.from_list('[1, null, 555555, null, 43, 1]')`
 
 ### Printing a list representation of a binary tree
 
@@ -101,22 +101,22 @@ or, from a JSON string
 
 ## Matrices
 ### Printing a matrix
-    >>> mat1 = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-    >>> mat2 = [[3, 0, 8, 4], [2, 2340, 5, 7], [97, 2, 6, 3], [0, 3, 1, 13]]
-    >>> mat3 = '[["a", "b", "ccc"], ["dd", "e", "ff"], ["g", "h", "i"]]'
+    >>> mat1 = [[1.2, 2.33, 3.0], [4.5, 6.7777, 8], [9.0, 10.98, 111.42]]
+    >>> mat2 = [[3, 0, 8, 4], [2, 2340, 5, 7], [97, 432, 6, 3], [0, 3, 1, 13]]
+    >>> mat3 = mat3 = '[["a", "b", "ccc"], ["dd", "e", "ff"], ["g", "h", "i"]]'
     
     >>> print(matrix_to_string(mat1))
-    [ [ 1, 2, 3 ],
-      [ 4, 5, 6 ],
-      [ 7, 8, 9 ] ]
+    [ [ 1.2   , 2.33  , 3.0    ],
+      [ 4.5   , 6.7777, 8      ],
+      [ 9.0   , 10.98 , 111.42 ] ]
       
     >>> print(matrix_to_string(mat2))
     [ [    3,    0,    8,    4 ],
       [    2, 2340,    5,    7 ],
-      [   97,    2,    6,    3 ],
+      [   97,  432,    6,    3 ],
       [    0,    3,    1,   13 ] ]
 
-    >>> print(matrix_to_string(mat3) + '\n')
-    [ [   'a',   'b', 'ccc' ],
-      [  'dd',   'e',  'ff' ],
-      [   'g',   'h',   'i' ] ]
+    >>> print(matrix_to_string(mat3))
+    [ [ 'a'  , 'b'  , 'ccc' ],
+      [ 'dd' , 'e'  , 'ff'  ],
+      [ 'g'  , 'h'  , 'i'   ] ]

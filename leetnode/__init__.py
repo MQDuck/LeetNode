@@ -222,10 +222,15 @@ def matrix_to_string(matrix: Union[List[List], str]) -> str:
     item_spacing = 0 if len(lengths) == 0 else max(lengths)
     del lengths
 
+    if isinstance(matrix[0][0], int):
+        item_format = '{item:>' + str(item_spacing) + '}, '
+    else:
+        item_format = '{item:<' + str(item_spacing) + '}, '
+
     str_arr = []
     for i in range(len(matrix)):
         str_arr.append('[ [ ' if i == 0 else '  [ ')
-        str_arr.append(''.join([f'{repr(item):>{item_spacing}}, ' for item in matrix[i]])[:-2] + ' ]')
+        str_arr.append(''.join([item_format.format(item=repr(item)) for item in matrix[i]])[:-2] + ' ]')
         str_arr.append(' ]' if i == len(matrix) - 1 else ',\n')
     return ''.join(str_arr)
 
@@ -244,7 +249,7 @@ if __name__ == '__main__':
 
         btree1 = build_btree([3, 9, 20, 8, 16, 15, 7, 1, 2, None, None, 3, None, None, None, None, None, 12])
         btree2 = TreeNode.from_list(['a', 'b', 'cd', None, 'ef', 'gh', 'i', None, None, None, None, 'jkl', 'mn', 'o'])
-        btree3 = TreeNode.from_list('[1,null,555555,null,43,1]')
+        btree3 = TreeNode.from_list('[1, null, 555555, null, 43, 1]')
         print(btree1)
         print(btree1.tree_string() + '\n')
         print(btree2)
@@ -253,8 +258,8 @@ if __name__ == '__main__':
         print(btree3.tree_string() + '\n')
         print()
 
-        mat1 = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-        mat2 = [[3, 0, 8, 4], [2, 2340, 5, 7], [97, 2, 6, 3], [0, 3, 1, 13]]
+        mat1 = [[1.2, 2.33, 3.0], [4.5, 6.7777, 8], [9.0, 10.98, 111.42]]
+        mat2 = [[3, 0, 8, 4], [2, 2340, 5, 7], [97, 432, 6, 3], [0, 3, 1, 13]]
         mat3 = '[["a", "b", "ccc"], ["dd", "e", "ff"], ["g", "h", "i"]]'
         print(matrix_to_string(mat1) + '\n')
         print(matrix_to_string(mat2) + '\n')
