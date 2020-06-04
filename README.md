@@ -106,9 +106,9 @@ or, from a JSON string
     >>> mat3 = mat3 = '[["a", "b", "ccc"], ["dd", "e", "ff"], ["g", "h", "i"]]'
     
     >>> print(matrix_to_string(mat1))
-    [ [ 1.2   , 2.33  , 3.0    ],
-      [ 4.5   , 6.7777, 8      ],
-      [ 9.0   , 10.98 , 111.42 ] ]
+    [ [ 1.2,    2.33,   3.0,   ],
+      [ 4.5,    6.7777, 8,     ],
+      [ 9.0,    10.98,  111.42 ] ]
       
     >>> print(matrix_to_string(mat2))
     [ [    3,    0,    8,    4 ],
@@ -117,6 +117,6 @@ or, from a JSON string
       [    0,    3,    1,   13 ] ]
 
     >>> print(matrix_to_string(mat3))
-    [ [ 'a'  , 'b'  , 'ccc' ],
-      [ 'dd' , 'e'  , 'ff'  ],
-      [ 'g'  , 'h'  , 'i'   ] ]
+    [ [ 'a',   'b',   'ccc' ],
+      [ 'dd',  'e',   'ff', ],
+      [ 'g',   'h',   'i',  ] ]
