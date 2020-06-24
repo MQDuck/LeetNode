@@ -18,7 +18,7 @@ class TreeNode(Generic[T]):
             yield val
 
     def __repr__(self) -> str:
-        return str(self.to_list())
+        return repr(self.to_list())
 
     @staticmethod
     def from_list(arr: Union[List[T], str]) -> Optional:
@@ -26,7 +26,7 @@ class TreeNode(Generic[T]):
 
     def to_list(self) -> List[T]:
         """Flatten a binary tree of TreeNodes to a list of node values. This is the inverse of
-        build_tree()/TreeNode.from_list()
+        build_btree()/TreeNode.from_list()
 
         :return: List of node values.
         """
@@ -209,7 +209,7 @@ def build_linked_list(arr: Union[List[T], str, None]) -> Optional[ListNode[T]]:
 def matrix_to_string(matrix: Union[List[List], str]) -> str:
     """Return a pretty-print string for a matrix.
 
-    :param matrix: A two dimensional list.
+    :param matrix: A two dimensional list or JSON array string.
     :return: Pretty-print string.
     """
     if isinstance(matrix, str):
@@ -222,7 +222,14 @@ def matrix_to_string(matrix: Union[List[List], str]) -> str:
     item_spacing = 0 if len(lengths) == 0 else max(lengths)
     del lengths
 
-    if isinstance(matrix[0][0], int):
+    def is_int_matrix():
+        for row in matrix:
+            for item in row:
+                if not isinstance(item, int):
+                    return False
+        return True
+
+    if is_int_matrix():
         def format_item(item, _):
             return ('{item:>' + str(item_spacing) + '}, ').format(item=repr(item))
     else:
